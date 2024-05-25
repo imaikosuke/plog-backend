@@ -8,20 +8,21 @@ import (
 )
 
 func main() {
-    // データベースの初期化
-    db.Init()
+	// データベースの初期化
+	db.Init()
 
-    r := gin.Default()
+	r := gin.Default()
 
-    r.GET("/ping", func(c *gin.Context) {
-        c.JSON(200, gin.H{
-            "message": "pong",
-        })
-    })
+	r.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
+	})
 
-    // ユーザー登録とログインのルーティング
-    r.POST("/api/register", handlers.RegisterUser)
-    r.POST("/api/login", handlers.LoginUser)
+	// ユーザー登録とログインのルーティング
+	r.POST("/api/register", handlers.RegisterUser)
+	r.POST("/api/login", handlers.LoginUser)
+	r.POST("/api/photolog", handlers.CreatePhotolog)
 
-    r.Run()
+	r.Run()
 }

@@ -11,19 +11,19 @@ import (
 var DB *gorm.DB
 
 func Init() {
-    dsn := "user=imaikosuke password=postgresql0202 dbname=plog sslmode=disable"
-    db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-    if err != nil {
-        log.Fatal("Failed to connect to database:", err)
-    }
+	dsn := "user=imaikosuke password=postgresql0202 dbname=plog sslmode=disable"
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		log.Fatal("Failed to connect to database:", err)
+	}
 
-    DB = db
+	DB = db
 
-    // マイグレーションを自動的に実行
-    err = db.AutoMigrate(&models.User{}, &models.Photolog{}, &models.Image{}, &models.Comment{})
-    if err != nil {
-        log.Fatal("Failed to run migrations:", err)
-    }
+	// マイグレーションを自動的に実行
+	err = db.AutoMigrate(&models.User{}, &models.Photolog{}, &models.Image{}, &models.Comment{})
+	if err != nil {
+		log.Fatal("Failed to run migrations:", err)
+	}
 
-    log.Println("Successfully connected to the database")
+	log.Println("Successfully connected to the database")
 }
