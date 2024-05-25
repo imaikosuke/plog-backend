@@ -1,30 +1,29 @@
 package db
 
 import (
-    "database/sql"
-    "fmt"
-    "log"
+	"log"
+	"plog-backend/internal/models"
 
-    _ "github.com/lib/pq"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
-var db *sql.DB
+var DB *gorm.DB
 
 func Init() {
-    var err error
-    connStr := "user=imaikosuke password=postgresql0202 dbname=plog sslmode=disable"
-    db, err = sql.Open("postgres", connStr)
+    dsn := "user=imaikosuke password=postgresql0202 dbname=plog sslmode=disable"
+    db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
     if err != nil {
-        log.Fatal(err)
+        log.Fatal("Failed to connect to database:", err)
     }
 
-    if err = db.Ping(); err != nil {
-        log.Fatal(err)
+    DB = db
+
+    // マイグレーションを自動的に実行
+    err = db.AutoMigrate(&models.User{}, &models.Photolog{}, &models.Image{}, &models.Comment{})
+    if err != nil {
+        log.Fatal("Failed to run migrations:", err)
     }
 
-    fmt.Println("Successfully connected to the database")
-}
-
-func GetDB() *sql.DB {
-    return db
+    log.Println("Successfully connected to the database")
 }
