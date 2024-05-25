@@ -1,33 +1,27 @@
 package main
 
 import (
-	"net/http"
 	"plog-backend/internal/db"
+	"plog-backend/internal/handlers"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-		db.Init()
+    // データベースの初期化
+    db.Init()
+
     r := gin.Default()
 
-    // Pingテスト用のエンドポイント
     r.GET("/ping", func(c *gin.Context) {
-        c.JSON(http.StatusOK, gin.H{
+        c.JSON(200, gin.H{
             "message": "pong",
         })
     })
-		
 
-    // 他のエンドポイントを追加
-    r.POST("/api/upload", uploadHandler)
+    // ユーザー登録とログインのルーティング
+    r.POST("/api/register", handlers.RegisterUser)
+    r.POST("/api/login", handlers.LoginUser)
 
-    // サーバーの起動
-    r.Run() // デフォルトでは ":8080" でリッスンします
-}
-
-// 画像アップロードのハンドラー
-func uploadHandler(c *gin.Context) {
-    // アップロード処理をここに記述
-    c.JSON(http.StatusOK, gin.H{"message": "Upload endpoint hit"})
+    r.Run()
 }
