@@ -24,6 +24,7 @@ func main() {
 	r.POST("/api/login", handlers.LoginUser)
 	r.POST("/api/photolog", handlers.CreatePhotolog)
 	r.GET("/api/photologs", handlers.GetPhotologs)
+	r.DELETE("/api/photolog", handlers.DeletePhotolog)
 
 	r.Run()
 }
