@@ -63,3 +63,20 @@ func createPartition(tableName string, userID uint) {
 	sql := fmt.Sprintf("CREATE TABLE %s PARTITION OF photologs FOR VALUES IN (%d)", tableName, userID)
 	db.DB.Exec(sql)
 }
+
+func GetPhotologs(c *gin.Context) {
+	userID := c.Query("user_id")
+	if userID == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "user_id is required"})
+		return
+	}
+
+	var photologs []models.Photolog
+	partitionTableName := fmt.Sprintf("photologs_user_%s", userID)
+	if err := db.DB.Table(partitionTableName).Find(&photologs).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to load photologs"})
+		return
+	}
+
+	c.JSON(http.StatusOK, photologs)
+}

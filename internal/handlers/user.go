@@ -23,6 +23,7 @@ func RegisterUser(c *gin.Context) {
 		return
 	}
 
+	// TODO: よりセキュリティ性の高い認証ロジックにする必要がある
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
