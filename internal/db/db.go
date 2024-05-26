@@ -2,7 +2,6 @@ package db
 
 import (
 	"log"
-	"plog-backend/internal/models"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -19,11 +18,11 @@ func Init() {
 
 	DB = db
 
-	// マイグレーションを自動的に実行
-	err = db.AutoMigrate(&models.User{}, &models.Photolog{}, &models.Image{}, &models.Comment{})
-	if err != nil {
-		log.Fatal("Failed to run migrations:", err)
-	}
+	// 自動マイグレーション
+	// err = db.AutoMigrate(&models.User{}, &models.Photolog{}, &models.Image{}, &models.Comment{})
+	// if err != nil {
+	//     log.Fatal("Failed to run migrations:", err)
+	// }
 
 	log.Println("Successfully connected to the database")
 }

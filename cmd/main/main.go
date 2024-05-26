@@ -23,6 +23,7 @@ func main() {
 	r.POST("/api/register", handlers.RegisterUser)
 	r.POST("/api/login", handlers.LoginUser)
 	r.POST("/api/photolog", handlers.CreatePhotolog)
+	r.GET("/api/photologs", handlers.GetPhotologs)
 
 	r.Run()
 }
