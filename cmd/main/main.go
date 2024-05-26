@@ -1,30 +1,44 @@
 package main
 
 import (
+	"log"
 	"plog-backend/internal/db"
 	"plog-backend/internal/handlers"
 
+	"os"
+
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	// .envファイルの読み込み
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	// 環境変数の設定
+	jwtSecretKey := os.Getenv("JWT_SECRET_KEY")
+	if jwtSecretKey == "" {
+		log.Fatal("JWT_SECRET_KEY is not set")
+	}
+
 	// データベースの初期化
 	db.Init()
 
 	r := gin.Default()
 
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
-
-	// ユーザー登録とログインのルーティング
 	r.POST("/api/register", handlers.RegisterUser)
 	r.POST("/api/login", handlers.LoginUser)
-	r.POST("/api/photolog", handlers.CreatePhotolog)
-	r.GET("/api/photologs", handlers.GetPhotologs)
-	r.DELETE("/api/photolog", handlers.DeletePhotolog)
+
+	auth := r.Group("/")
+	auth.Use(handlers.AuthMiddleware())
+	{
+		auth.POST("/api/photolog", handlers.CreatePhotolog)
+		auth.GET("/api/photologs", handlers.GetPhotologs)
+		auth.DELETE("/api/photolog", handlers.DeletePhotolog)
+	}
 
 	r.Run()
 }
